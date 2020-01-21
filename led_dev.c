@@ -67,7 +67,7 @@ static int __init init_mod(void) //カーネルモジュールの初期化
 			const u32 mask = ~(0x7 << shift);
 			gpio_base[index] = (gpio_base[index] & mask) | (0x1 << shift);
 
-			retval =  alloc_chrdev_region(&dev, 0, 1, "myled");
+			retval =  alloc_chrdev_region(&dev, 0, 1, "led_dev");
 			if(retval < 0){
 				printk(KERN_ERR "alloc_chrdev_region failed.\n");
 				return retval;
@@ -79,12 +79,12 @@ static int __init init_mod(void) //カーネルモジュールの初期化
 				printk(KERN_ERR "cdev_add failed. major:%d, minor:%d",MAJOR(dev),MINOR(dev));
 				return retval;
 			}
-			cls = class_create(THIS_MODULE,"myled");   //ここから追加
+			cls = class_create(THIS_MODULE,"led_dev");   //ここから追加
 			if(IS_ERR(cls)){
 				printk(KERN_ERR "class_create failed.");
 				return PTR_ERR(cls);
 			}
-			device_create(cls, NULL, dev, NULL, "myled%d",MINOR(dev));
+			device_create(cls, NULL, dev, NULL, "led_dev%d",MINOR(dev));
 			return 0;
 }
 
